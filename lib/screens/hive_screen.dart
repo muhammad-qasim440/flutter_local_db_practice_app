@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db_practice_app/models/user.dart';
+import 'package:flutter_local_db_practice_app/screens/hive_update_user_data_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/hive_provider.dart';
@@ -52,21 +53,65 @@ class HiveScreen extends StatelessWidget {
                   : ListView.builder(
                       itemCount: hiveProvider.users.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Text(hiveProvider.users[index].name[0]),
+                        final user=hiveProvider.users[index];
+                        return Dismissible(
+                          key: Key(index.toString()),
+                          direction: DismissDirection.horizontal,
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.only(left: 20),
+                            child: Icon(Icons.delete, color: Colors.white),
                           ),
-                          title: Text(
-                            'Name : ${hiveProvider.users[index].name}',
+                          secondaryBackground:Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.only(right: 20),
+                            child: Icon(Icons.delete, color: Colors.white),
                           ),
-                          subtitle: Text(
-                            'Age: ${hiveProvider.users[index].age}',
-                          ),
-                          trailing: IconButton(
-                            onPressed: () async =>
-                                await hiveProvider.deleteUser(index),
-                            icon: Icon(Icons.delete),
+                          onDismissed: (direction) async {
+                            await hiveProvider.deleteUser(index);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${user.name} deleted successfully.',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                            await hiveProvider.loadUsers();
+
+                          },
+                          child: ListTile(
+                            onTap: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => HiveUpdateUserDataScreen(
+                                    user: User(
+                                      name: hiveProvider.users[index].name,
+                                      age: hiveProvider.users[index].age,
+                                    ),
+                                    index: index,
+                                  ),
+                                ),
+                              ),
+                            },
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              child: Text(hiveProvider.users[index].name[0]),
+                            ),
+                            title: Text(
+                              'Name : ${hiveProvider.users[index].name}',
+                            ),
+                            subtitle: Text(
+                              'Age: ${hiveProvider.users[index].age}',
+                            ),
+                            // trailing: IconButton(
+                            //   onPressed: () async =>
+                            //       await hiveProvider.deleteUser(index),
+                            //   icon: Icon(Icons.delete),
+                            // ),
                           ),
                         );
                       },

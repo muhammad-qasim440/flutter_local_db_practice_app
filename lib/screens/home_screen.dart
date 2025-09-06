@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_db_practice_app/screens/hive_screen.dart';
+import 'package:flutter_local_db_practice_app/screens/isar_screen.dart';
 import 'package:flutter_local_db_practice_app/screens/shared_preferences_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,6 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               },
               child: Text('Hive'),
+            ),
+            const SizedBox(height: 10,),
+            ElevatedButton(
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => IsarScreen()),
+                ),
+              },
+              child: Text('Isar'),
             ),
           ],
         ),

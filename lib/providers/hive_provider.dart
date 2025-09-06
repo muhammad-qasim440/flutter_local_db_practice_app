@@ -19,6 +19,7 @@ Future<void> insertUser(User user) async{
 
 
 Future<void> updateUser(int index,User user)async{
+  print('updating $user');
   await hiveService.updateUser(index,user);
   await loadUsers();
 }
